@@ -1,19 +1,21 @@
 import itertools
 
 def word_to_number(word, mapping):
+    """Преобразует слово в число на основе заданного отображения."""
     return int(''.join(str(mapping[char]) for char in word))
 
-def main():
-    unique_chars = set('ХРУСТГРОХОРРРРРРРР')
-    if len(unique_chars) > 10:
-        print("Слишком много уникальных букв для замены цифрами.")
-        return
+def is_valid_mapping(mapping):
+    """Проверяет, что старшие буквы не равны нулю."""
+    return mapping['Х'] != 0 and mapping['Г'] != 0 and mapping['Р'] != 0
+
+def find_solutions(unique_chars):
+    """Находит все возможные решения для заданных уникальных букв."""
+    solutions = []
     
     for perm in itertools.permutations(range(10), len(unique_chars)):
         mapping = dict(zip(unique_chars, perm))
         
-        # Проверяем, что старшие буквы не равны нулю
-        if mapping['Х'] == 0 or mapping['Г'] == 0 or mapping['Р'] == 0:
+        if not is_valid_mapping(mapping):
             continue
 
         xrust = word_to_number('ХРУСТ', mapping)
@@ -21,10 +23,26 @@ def main():
         rrrrrrrrrr = word_to_number('РРРРРРРРРР', mapping)
 
         if xrust * grokhot == rrrrrrrrrr:
-            print(f"Найдено решение: {mapping}")
-            return
+            solutions.append(mapping)
     
-    print("Решение не найдено.")
+    return solutions
+
+def main():
+    unique_chars = set('ХРУСТГРОХОРРРРРРРР')
+    
+    if len(unique_chars) > 10:
+        print("Слишком много уникальных букв для замены цифрами.")
+        return
+    
+    solutions = find_solutions(unique_chars)
+
+    if solutions:
+        for solution in solutions:
+            print(f"Найдено решение: {solution}")
+    else:
+        print("Решение не найдено.")
 
 if __name__ == "__main__":
     main()
+
+Найти еще
